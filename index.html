@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة عبقرينو لتدفق سيولة السوق الأمريكي 🧠🇺🇸</title>
+    <title>غرفة عمليات عبقرينو لتدفق السيولة 🧠🇺🇸</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -14,6 +14,7 @@
             --text: #f8fafc;
             --border: #334155;
             --warning: #f59e0b;
+            --x-color: #000000;
         }
 
         body {
@@ -77,7 +78,6 @@
         .avatar-text { font-size: 0.85rem; color: #94a3b8; }
         .avatar-text strong { color: white; display: block; font-size: 1rem; }
 
-        /* شريط الأخبار الأمريكي */
         .news-ticker {
             background: #020617;
             border: 1px solid var(--border);
@@ -114,7 +114,17 @@
             100% { transform: translate3d(100%, 0, 0); }
         }
 
-        /* شبكة الأسعار الحية للمؤشرات والشركات الكبرى */
+        /* تخطيط المنصة مع إضافة قسم التغريدات على اليسار */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
         .live-market-bar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -139,7 +149,6 @@
         .market-ticker-card .price { font-family: monospace; font-size: 1.1rem; color: var(--text); font-weight: bold; }
         .market-ticker-card .change { font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; display: inline-block; align-self: flex-start; }
 
-        /* شاشات الرصد الخاصة بمؤشر الخوف */
         .vix-panel {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -157,7 +166,6 @@
         .vix-value { font-size: 2.2rem; font-weight: bold; font-family: monospace; }
         .vix-status { font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-top: 5px; font-size: 0.9rem; }
         
-        /* مؤشر الخوف الدائري بالس اس اس */
         .gauge-container {
             position: relative;
             width: 180px;
@@ -196,26 +204,24 @@
             transition: transform 0.5s ease;
         }
 
-        /* العدادات الكلية والمحفظة */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
             margin-bottom: 25px;
         }
         .card {
             background-color: var(--card-bg);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             border: 1px solid var(--border);
             text-align: center;
         }
-        .card h3 { margin: 0 0 10px 0; color: #94a3b8; font-size: 1rem; }
-        .card .value { font-size: 1.8rem; font-weight: bold; }
+        .card h3 { margin: 0 0 10px 0; color: #94a3b8; font-size: 0.9rem; }
+        .card .value { font-size: 1.5rem; font-weight: bold; }
         .card .value.total { color: var(--primary); }
         .card .value.cash { color: var(--success); }
 
-        /* الأقسام وجداول الصفقات */
         .section-box {
             background-color: var(--card-bg);
             padding: 20px;
@@ -246,8 +252,8 @@
             border-radius: 8px;
             outline: none;
         }
-        .input-short { width: 110px; }
-        .input-med { width: 220px; }
+        .input-short { width: 100px; }
+        .input-med { width: 180px; }
 
         button {
             color: var(--bg-color);
@@ -283,10 +289,32 @@
             font-weight: bold;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+
+        /* تنسيق قسم تغريدات X الجانبي المطور */
+        .x-sidebar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            max-height: 1100px;
+        }
+        .x-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .x-title { color: #fff; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .x-timeline-container {
+            overflow-y: auto;
+            flex-grow: 1;
+            border-radius: 8px;
+            background: #000000;
+            min-height: 500px;
         }
     </style>
 </head>
@@ -329,133 +357,151 @@
         <div class="ticker-wrap" id="newsTickerContent"></div>
     </div>
 
-    <div class="live-market-bar">
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">📊 S&P 500</span><span class="change" id="change_SPX">+0.41%</span></div>
-            <span class="price" id="price_SPX">$7,418.90</span>
-        </div>
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">🚀 Nasdaq 100</span><span class="change" id="change_NDX">+0.70%</span></div>
-            <span class="price" id="price_NDX">$21,120.45</span>
-        </div>
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">🚗 Tesla (TSLA)</span><span class="change" id="change_TSLA">+1.45%</span></div>
-            <span class="price" id="price_TSLA">$184.20</span>
-        </div>
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">🟢 Nvidia (NVDA)</span><span class="change" id="change_NVDA">+2.10%</span></div>
-            <span class="price" id="price_NVDA">$924.50</span>
-        </div>
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">🍏 Apple (AAPL)</span><span class="change" id="change_AAPL">-0.32%</span></div>
-            <span class="price" id="price_AAPL">$178.10</span>
-        </div>
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">⚡ AMD</span><span class="change" id="change_AMD">+0.88%</span></div>
-            <span class="price" id="price_AMD">$162.40</span>
-        </div>
-        <div class="market-ticker-card">
-            <div class="card-top"><span class="name">📱 AppLovin (APP)</span><span class="change" id="change_APP">+3.15%</span></div>
-            <span class="price" id="price_APP">$84.65</span>
-        </div>
-    </div>
+    <div class="main-layout">
+        
+        <div class="dashboard-main">
+            <div class="live-market-bar">
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">📊 S&P 500 (SPX)</span><span class="change" id="change_SPX">+0.21%</span></div>
+                    <span class="price" id="price_SPX">$7,405.61</span>
+                </div>
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">🚀 Nasdaq 100</span><span class="change" id="change_NDX">+0.71%</span></div>
+                    <span class="price" id="price_NDX">$21,129.45</span>
+                </div>
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">🚗 Tesla (TSLA)</span><span class="change" id="change_TSLA">+1.97%</span></div>
+                    <span class="price" id="price_TSLA">$185.08</span>
+                </div>
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">🟢 Nvidia (NVDA)</span><span class="change" id="change_NVDA">+1.47%</span></div>
+                    <span class="price" id="price_NVDA">$918.81</span>
+                </div>
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">🍏 Apple (AAPL)</span><span class="change" id="change_AAPL">-0.73%</span></div>
+                    <span class="price" id="price_AAPL">$177.30</span>
+                </div>
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">⚡ AMD ⚡</span><span class="change" id="change_AMD">+0.72%</span></div>
+                    <span class="price" id="price_AMD">$162.16</span>
+                </div>
+                <div class="market-ticker-card">
+                    <div class="card-top"><span class="name">📱 AppLovin (APP)</span><span class="change" id="change_APP">+4.05%</span></div>
+                    <span class="price" id="price_APP">$85.32</span>
+                </div>
+            </div>
 
-    <div class="vix-panel">
-        <div class="vix-info">
-            <div class="vix-title">مؤشر الخوف والجشع في نيويورك (VIX)</div>
-            <div class="vix-value" id="vixValue">14.85</div>
-            <div class="vix-status" id="vixStatus">منطقة الأمان والسيولة الزخمة ✅</div>
-        </div>
-        <div class="gauge-container">
-            <div class="gauge-body"></div>
-            <div class="gauge-color-fill" id="gaugeFill"></div>
-            <div class="gauge-needle" id="gaugeNeedle"></div>
-        </div>
-    </div>
+            <div class="vix-panel">
+                <div class="vix-info">
+                    <div class="vix-title">مؤشر الخوف والجشع في نيويورك (VIX)</div>
+                    <div class="vix-value" id="vixValue">14.33</div>
+                    <div class="vix-status" id="vixStatus">طاقة جشع وسيولة عالية بالسوق (صعود) 🔥</div>
+                </div>
+                <div class="gauge-container">
+                    <div class="gauge-body"></div>
+                    <div class="gauge-color-fill" id="gaugeFill"></div>
+                    <div class="gauge-needle" id="gaugeNeedle"></div>
+                </div>
+            </div>
 
-    <div class="grid">
-        <div class="card">
-            <h3>إجمالي القيمة الكلية للمحفظة</h3>
-            <div class="value total" id="totalPortfolio">$0.00</div>
-        </div>
-        <div class="card">
-            <h3>القيمة الحالية للأصول والعقود</h3>
-            <div class="value" id="investedValue">$0.00</div>
-        </div>
-        <div class="card">
-            <h3>السيولة المتاحة (Cash)</h3>
-            <div class="value cash" id="cashValue">$0.00</div>
-        </div>
-    </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>إجمالي القيمة الكلية</h3>
+                    <div class="value total" id="totalPortfolio">$0.00</div>
+                </div>
+                <div class="card">
+                    <h3>القيمة الحالية للعقود</h3>
+                    <div class="value" id="investedValue">$0.00</div>
+                </div>
+                <div class="card">
+                    <h3>السيولة المتاحة (Cash)</h3>
+                    <div class="value cash" id="cashValue">$0.00</div>
+                </div>
+            </div>
 
-    <div class="section-box">
-        <div class="section-title">💰 ضخ سيولة كاش (شحن الحساب)</div>
-        <div class="flex-container">
-            <input type="number" id="liquidityInput" class="input-short" placeholder="المبلغ $..." min="1">
-            <button class="btn-success" onclick="addLiquidity()">تأكيد الإيداع +</button>
-        </div>
-    </div>
+            <div class="section-box">
+                <div class="section-title">💰 ضخ سيولة كاش (شحن الحساب)</div>
+                <div class="flex-container">
+                    <input type="number" id="liquidityInput" class="input-short" placeholder="المبلغ $..." min="1">
+                    <button class="btn-success" onclick="addLiquidity()">تأكيد الإيداع +</button>
+                </div>
+            </div>
 
-    <div class="section-box">
-        <div class="section-title">⚡ تنفيذ أمر شراء مخصص (أسهم أو عقود Options)</div>
-        <div class="flex-container">
-            <select id="assetTypeSelect" onchange="checkSelectType()">
-                <option value="SPX">مؤشر S&P 500 (حي)</option>
-                <option value="NDX">مؤشر Nasdaq 100 (حي)</option>
-                <option value="TSLA">سهم تسلا (TSLA)</option>
-                <option value="NVDA">سهم أنفيديا (NVDA)</option>
-                <option value="AAPL">سهم آبل (AAPL)</option>
-                <option value="AMD">سهم AMD</option>
-                <option value="APP">سهم AppLovin (APP)</option>
-                <option value="CUSTOM">عقد خيارات (Options) أو شركة أخرى...</option>
-            </select>
-            <input type="text" id="assetNameInput" class="input-med" style="display:none;" placeholder="رمز الشركة أو العقد...">
-            <input type="number" id="assetAmountInput" class="input-short" placeholder="مبلغ الدخول $..." min="1">
-            <input type="number" id="entryPriceInput" class="input-short" placeholder="سعر الشراء $..." step="0.01">
-            <button class="btn-primary" onclick="addNewAsset()">إرسال الأمر للمقاصة 🚀</button>
-        </div>
-    </div>
+            <div class="section-box">
+                <div class="section-title">⚡ تنفيذ أمر شراء مخصص (أسهم أو عقود Options)</div>
+                <div class="flex-container">
+                    <select id="assetTypeSelect" onchange="checkSelectType()">
+                        <option value="SPX">مؤشر S&P 500 (حي)</option>
+                        <option value="NDX">مؤشر Nasdaq 100 (حي)</option>
+                        <option value="TSLA">سهم تسلا (TSLA)</option>
+                        <option value="NVDA">سهم أنفيديا (NVDA)</option>
+                        <option value="AAPL">سهم آبل (AAPL)</option>
+                        <option value="AMD">سهم AMD</option>
+                        <option value="APP">سهم AppLovin (APP)</option>
+                        <option value="CUSTOM">عقد خيارات (Options) أو شركة أخرى...</option>
+                    </select>
+                    <input type="text" id="assetNameInput" class="input-med" style="display:none;" placeholder="رمز الشركة أو العقد...">
+                    <input type="number" id="assetAmountInput" class="input-short" placeholder="مبلغ الدخول $..." min="1">
+                    <input type="number" id="entryPriceInput" class="input-short" placeholder="سعر الشراء $..." step="0.01">
+                    <button class="btn-primary" onclick="addNewAsset()">إرسال الأمر 🚀</button>
+                </div>
+            </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>الأصل / العقد</th>
-                    <th>حالة الحركة</th>
-                    <th>رأس المال المخصص</th>
-                    <th>سعر الدخول</th>
-                    <th>الكمية / العقود</th>
-                    <th>السعر الحالي في نيويورك</th>
-                    <th>صافي الربح / الخسارة</th>
-                    <th>إجراء</th>
-                </tr>
-            </thead>
-            <tbody id="assetsTable"></tbody>
-        </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الأصل / العقد</th>
+                            <th>حالة الحركة</th>
+                            <th>رأس المال المخصص</th>
+                            <th>سعر الدخول</th>
+                            <th>الكمية</th>
+                            <th>السعر في نيويورك</th>
+                            <th>الربح / الخسارة</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assetsTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="x-sidebar">
+            <div class="x-sidebar-header">
+                <div class="x-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:white;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    <span>رادار عبقرينو الحي على X</span>
+                </div>
+                <span class="live-tag">تحديث تلقائي 🔴</span>
+            </div>
+            <div class="x-timeline-container">
+                <a class="twitter-timeline" data-theme="dark" data-chrome="noheader nofooter noborder transparent text-center" href="https://twitter.com/22hfc?ref_src=twsrc%5Etfw">تغريدات محملة بشكل حي...</a>
+            </div>
+        </div>
+
     </div>
 </div>
 
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 <script>
-    // الأسعار مربوطة بالنطاق السعري الفعلي مع التذبذب الحي
     let livePrices = {
-        SPX: { price: 7418.90, change: 0.41, base: 7390 },
-        NDX: { price: 21120.45, change: 0.70, base: 20980 },
-        TSLA: { price: 184.20, change: 1.45, base: 181.5 },
-        NVDA: { price: 924.50, change: 2.10, base: 905.5 },
-        AAPL: { price: 178.10, change: -0.32, base: 178.6 },
-        AMD: { price: 162.40, change: 0.88, base: 161.0 },
-        APP: { price: 84.65, change: 3.15, base: 82.0 }
+        SPX: { price: 7405.61, change: 0.21, base: 7390 },
+        NDX: { price: 21129.45, change: 0.71, base: 20980 },
+        TSLA: { price: 185.08, change: 1.97, base: 181.5 },
+        NVDA: { price: 918.81, change: 1.47, base: 905.5 },
+        AAPL: { price: 177.30, change: -0.73, base: 178.6 },
+        AMD: { price: 162.16, change: 0.72, base: 161.0 },
+        APP: { price: 85.32, change: 4.05, base: 82.0 }
     };
 
-    let vixValue = 14.85;
-
-    let portfolio = JSON.parse(localStorage.getItem('abqarino_v5_portfolio')) || { total: 0, cash: 0, currentInvested: 0 };
-    let assets = JSON.parse(localStorage.getItem('abqarino_v5_assets')) || [];
+    let vixValue = 14.33;
+    let portfolio = JSON.parse(localStorage.getItem('abqarino_v7_portfolio')) || { total: 0, cash: 0, currentInvested: 0 };
+    let assets = JSON.parse(localStorage.getItem('abqarino_v7_assets')) || [];
 
     function simulateUSMarket() {
-        // تحديث تذبذب الأسعار الحية
         Object.keys(livePrices).forEach(sym => {
-            let pct = (sym === 'NVDA' || sym === 'TSLA' || sym === 'APP') ? 0.4 : 0.1;
+            let pct = (sym === 'NVDA' || sym === 'TSLA' || sym === 'APP') ? 0.3 : 0.08;
             let drift = (Math.random() - 0.5) * livePrices[sym].price * (pct / 100); 
             livePrices[sym].price = parseFloat((livePrices[sym].price + drift).toFixed(2));
             
@@ -466,53 +512,23 @@
             const changeEl = document.getElementById(`change_${sym}`);
             changeEl.innerText = `${pctChange >= 0 ? '+' : ''}${pctChange.toFixed(2)}%`;
             changeEl.className = 'change ' + (pctChange >= 0 ? 'profit' : 'loss');
-            changeEl.style.background = pctChange >= 0 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)';
         });
 
-        // محاكاة وتحديث مؤشر الخوف VIX
-        let vixDrift = (Math.random() - 0.5) * 0.15;
+        let vixDrift = (Math.random() - 0.5) * 0.1;
         vixValue = Math.max(9, Math.min(45, parseFloat((vixValue + vixDrift).toFixed(2))));
         document.getElementById('vixValue').innerText = vixValue;
         
-        let statusEl = document.getElementById('vixStatus');
-        let needle = document.getElementById('gaugeNeedle');
-        let fill = document.getElementById('gaugeFill');
-        
-        // حساب زاوية دوران الإبرة وتغيير ألوان المؤشر بناء على قراءة VIX
         let percentage = (vixValue - 9) / (40 - 9); 
         let angle = Math.max(0, Math.min(180, percentage * 180));
-        needle.style.transform = `translateX(-50%) rotate(${angle - 90}deg)`;
-
-        if(vixValue < 15) {
-            statusEl.innerText = "طاقة جشع وسيولة عالية بالسوق (صعود) 🔥";
-            statusEl.style.background = "rgba(34,197,94,0.15)";
-            statusEl.style.color = "var(--success)";
-            fill.style.borderRightColor = "var(--success)";
-            fill.style.borderTopColor = "var(--success)";
-        } else if (vixValue >= 15 && vixValue < 23) {
-            statusEl.innerText = "منطقة أمان واستقرار وهدوء نسبي ⚖️";
-            statusEl.style.background = "rgba(245,158,11,0.15)";
-            statusEl.style.color = "var(--warning)";
-            fill.style.borderRightColor = "var(--warning)";
-            fill.style.borderTopColor = "var(--warning)";
-        } else {
-            statusEl.innerText = "منطقة ذعر وخوف شديد (هبوط حاد وسيولة خارجة) 🚨";
-            statusEl.style.background = "rgba(239,68,68,0.15)";
-            statusEl.style.color = "var(--danger)";
-            fill.style.borderRightColor = "var(--danger)";
-            fill.style.borderTopColor = "var(--danger)";
-        }
+        document.getElementById('gaugeNeedle').style.transform = `translateX(-50%) rotate(${angle - 90}deg)`;
 
         updateUI();
     }
 
     function updateUI() {
         let currentAssetsValue = 0;
-
         assets.forEach(asset => {
-            if(livePrices[asset.symbol]) {
-                asset.currentPrice = livePrices[asset.symbol].price;
-            }
+            if(livePrices[asset.symbol]) { asset.currentPrice = livePrices[asset.symbol].price; }
             let qty = asset.amount / asset.entryPrice;
             asset.currentValue = qty * asset.currentPrice;
             asset.pnl = asset.currentValue - asset.amount;
@@ -531,19 +547,18 @@
         tbody.innerHTML = '';
 
         if(assets.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; padding:30px;">المحفظة تنتظر الأوامر.. اختر السهم أو المؤشر واضغط تنفيذ!</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; padding:30px;">المحفظة خالية.. نفذ أمر شراء لتبدأ المتابعة الحية.</td></tr>`;
         }
 
         assets.forEach((asset, index) => {
             let qty = (asset.amount / asset.entryPrice).toFixed(4);
             let pnlClass = asset.pnl >= 0 ? 'profit' : 'loss';
             let pnlSign = asset.pnl >= 0 ? '+' : '';
-            let isLive = livePrices[asset.symbol] ? '<span class="live-tag">LIVE 🦅</span>' : '<span style="color:#64748b">ثابت</span>';
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${asset.name}</strong></td>
-                <td>${isLive}</td>
+                <td><span class="live-tag">LIVE 🦅</span></td>
                 <td>$${asset.amount.toLocaleString()}</td>
                 <td>$${asset.entryPrice.toLocaleString()}</td>
                 <td>${qty}</td>
@@ -554,8 +569,8 @@
             tbody.appendChild(tr);
         });
 
-        localStorage.setItem('abqarino_v5_portfolio', JSON.stringify(portfolio));
-        localStorage.setItem('abqarino_v5_assets', JSON.stringify(assets));
+        localStorage.setItem('abqarino_v7_portfolio', JSON.stringify(portfolio));
+        localStorage.setItem('abqarino_v7_assets', JSON.stringify(assets));
     }
 
     function checkSelectType() {
@@ -566,7 +581,6 @@
         if(select.value === 'CUSTOM') {
             nameInput.style.display = 'inline-block';
             entryPriceInput.value = '';
-            entryPriceInput.removeAttribute('disabled');
         } else {
             nameInput.style.display = 'none';
             entryPriceInput.value = livePrices[select.value].price;
@@ -588,37 +602,21 @@
         const amountInput = document.getElementById('assetAmountInput');
         const entryPriceInput = document.getElementById('entryPriceInput');
         
-        let name = "";
-        let symbol = select.value;
+        let name = symbol = select.value;
         let amount = parseFloat(amountInput.value);
         let entryPrice = parseFloat(entryPriceInput.value);
 
         if(symbol === 'CUSTOM') {
             name = nameInput.value.trim();
-            if(name === "") { alert("الرجاء تحديد اسم السهم أو العقد المخصص!"); return; }
+            if(name === "") return;
         } else {
             name = select.options[select.selectedIndex].text.split('(')[0].trim();
         }
 
-        if (isNaN(amount) || amount <= 0 || isNaN(entryPrice) || entryPrice <= 0) {
-            alert("تأكد من كتابة المبالغ وأسعار الدخول بشكل صحيح!");
-            return;
-        }
-
-        if (amount > portfolio.cash) {
-            alert(`السيولة لا تكفي! المتاح: $${portfolio.cash.toLocaleString()}`);
-            return;
-        }
+        if (isNaN(amount) || amount <= 0 || isNaN(entryPrice) || entryPrice <= 0 || amount > portfolio.cash) return;
 
         portfolio.cash -= amount;
-        assets.push({
-            name: name,
-            symbol: symbol,
-            amount: amount,
-            entryPrice: entryPrice,
-            currentPrice: symbol !== 'CUSTOM' ? livePrices[symbol].price : entryPrice
-        });
-
+        assets.push({ name, symbol, amount, entryPrice, currentPrice: symbol !== 'CUSTOM' ? livePrices[symbol].price : entryPrice });
         amountInput.value = '';
         updateUI();
     }
@@ -630,10 +628,8 @@
     }
 
     const marketNews2026 = [
-        " 🚨 عاجل: سيولة ضخمة تتدفق على سهم أنفيديا NVDA مع زيادة طلبات رقاقات الذكاء الاصطناعي الجديدة.",
-        " 🚗 تسلا: سهم TSLA يرتد بقوة من مناطق السيولة العميقة (Discount Liquidity) ليعزز صعود النازداك.",
-        " 📊 مؤشر VIX: انخفاض مستويات الخوف يعطي الضوء الأخضر للمضاربين لتنفيذ عقود خيارات الـ Options الاستراتيجية.",
-        " 🛡️ نصيحة عبقرينو: تذكر دائماً إدارة حجم الصفقة (Position Sizing) هي درعك الوحيد عند تصفية سيولة الجلسة."
+        " 🚨 عاجل: سيولة ضخمة تتدفق على المؤشرات القيادية والأسهم التكنولوجية مع بداية جلسة نيويورك.",
+        " 📊 تذكير عبقرينو: حركة السعر الذكية تبحث عن الفجوات (FVG)، التزم بإدارتك الصارمة للسيولة دائماً."
     ];
     document.getElementById('newsTickerContent').innerHTML = marketNews2026.map(n => `<span>${n.split(':')[0]}:</span>${n.split(':')[1]}`).join(" | ");
 

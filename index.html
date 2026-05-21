@@ -3,152 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة رادار السيولة 📊</title>
+    <title>غرفة عمليات عبقرينو | SPX500</title>
     <style>
         :root {
-            --bg-color: #0c101b;
-            --card-bg: #131722;
+            --bg: #0c101b;
+            --card: #131722;
             --border: #2a2e39;
             --text: #d1d4dc;
             --primary: #2962ff;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
+        body { font-family: sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* قسم المؤشر */
+        .chart-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
-        
-        header {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
+        /* قسم التغريدة المرفوعة */
+        .tweet-section {
+            background: var(--card);
             border: 1px solid var(--border);
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
         }
-        header h1 { margin: 0; color: #fff; font-size: 1.8rem; }
-        header p { color: #787b86; margin: 5px 0 0 0; }
-
-        /* تقسيم الشاشة: يمين الشاشات الحية، يسار التغريدات */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-layout { grid-template-columns: 1fr; }
-        }
-
-        .widgets-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .tradingview-widget-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+        .tweet-section h2 { color: #fff; margin-bottom: 15px; font-size: 1.2rem; }
+        .tweet-section img {
+            max-width: 100%;
             border-radius: 8px;
-            padding: 10px;
-            overflow: hidden;
-        }
-
-        .x-sidebar {
-            background-color: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            max-height: 800px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .x-title {
-            color: #fff;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-            font-size: 1.1rem;
-        }
-
-        .x-timeline {
-            overflow-y: auto;
-            flex-grow: 1;
-            border-radius: 6px;
-            min-height: 500px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>غرفة مراقبة الأسواق والسيولة 🧠🇺🇸</h1>
-        <p>شاشات حية ومباشرة من قلب البورصة الأمريكية بالتعاون مع TradingView</p>
-    </header>
-
-    <div class="main-layout">
-        
-        <div class="widgets-grid">
-            
-            <div class="tradingview-widget-container">
-                <div class="tradingview-widget-container__widget"></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
-                {
-                "symbols": [
-                    { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500 Index" },
-                    { "proName": "NASDAQ:NVDA", "title": "NVIDIA Corp." },
-                    { "proName": "NASDAQ:TSLA", "title": "TESLA Inc." },
-                    { "proName": "NASDAQ:QQQ", "title": "Invesco QQQ" }
-                ],
-                "isTransparent": true,
-                "showSymbolLogo": true,
-                "colorTheme": "dark",
-                "locale": "ar"
-                }
-                </script>
-            </div>
-
-            <div class="tradingview-widget-container" style="height: 600px;">
-                <div id="tradingview_advanced_chart" style="height: 100%;"></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                <script type="text/javascript">
-                new TradingView.widget({
-                    "autosize": true,
-                    "symbol": "NASDAQ:NVDA",
-                    "interval": "D",
-                    "timezone": "Etc/UTC",
-                    "theme": "dark",
-                    "style": "1",
-                    "locale": "ar",
-                    "enable_publishing": false,
-                    "hide_side_toolbar": false,
-                    "allow_symbol_change": true,
-                    "container_id": "tradingview_advanced_chart"
-                });
-                </script>
-            </div>
-
+    <div class="chart-section">
+        <div class="tradingview-widget-container" style="height: 500px;">
+            <div id="tradingview_spx" style="height: 100%;"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+            <script type="text/javascript">
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "CAPITALCOM:SPX500", 
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "ar",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "container_id": "tradingview_spx"
+            });
+            </script>
         </div>
+    </div>
 
-        <div class="x-sidebar">
-            <div class="x-title">📡 تحديثات الحساب اللحظية</div>
-            <div class="x-timeline">
-                <a class="twitter-timeline" data-theme="dark" data-chrome="noheader nofooter noborder transparent" href="https://twitter.com/22hfc?ref_src=twsrc%5Etfw">جاري تحميل رادار التغريدات الحية...</a>
-            </div>
-        </div>
-
+    <div class="tweet-section">
+        <h2>تحديثات البروفيسور عبقرينو 🧠</h2>
+        <img src="رابط_صورتك_هنا.jpg" alt="تغريدة عبقرينو">
     </div>
 </div>
-
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 </body>
 </html>

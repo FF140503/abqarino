@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة عمليات عبقرينو لتدفق السيولة 🧠🇺🇸</title>
+    <title>منصة رادار السيولة 📊</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #38bdf8;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --text: #f8fafc;
-            --border: #334155;
-            --warning: #f59e0b;
+            --bg-color: #0c101b;
+            --card-bg: #131722;
+            --border: #2a2e39;
+            --text: #d1d4dc;
+            --primary: #2962ff;
         }
 
         body {
@@ -24,246 +21,134 @@
             padding: 20px;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; }
-
+        .container { max-width: 1400px; margin: 0 auto; }
+        
         header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             background: var(--card-bg);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid var(--border);
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        header h1 { margin: 0; color: #fff; font-size: 1.8rem; }
+        header p { color: #787b86; margin: 5px 0 0 0; }
+
+        /* تقسيم الشاشة: يمين الشاشات الحية، يسار التغريدات */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
             gap: 20px;
         }
 
-        .header-info h1 { margin: 0; color: var(--primary); font-size: 1.8rem; }
-        .header-info p { color: #94a3b8; margin: 5px 0 0 0; }
-        
-        .avatar-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.03);
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+        @media (max-width: 1024px) {
+            .main-layout { grid-template-columns: 1fr; }
         }
 
-        .avatar-img-container {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            overflow: hidden;
-            background: #f472b6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .news-ticker {
-            background: #020617;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 25px;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-        }
-        .news-title {
-            position: absolute; right: 0; top: 0; bottom: 0;
-            background: var(--danger); color: white;
-            padding: 11px 15px; font-weight: bold; z-index: 2;
-            border-radius: 0 8px 8px 0;
-        }
-        .ticker-wrap {
-            display: inline-block;
-            padding-right: 140px;
-            animation: ticker 35s linear infinite;
-            color: #e2e8f0;
-        }
-        
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(100%, 0, 0); }
-        }
-
-        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
-
-        .live-market-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-        .market-ticker-card {
-            background: #030712;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
+        .widgets-grid {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 20px;
         }
-        .market-ticker-card .price { font-family: monospace; font-size: 1.2rem; color: var(--text); font-weight: bold; }
 
-        .vix-panel {
+        .tradingview-widget-container {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            border-radius: 8px;
+            padding: 10px;
+            overflow: hidden;
         }
-        .vix-value { font-size: 2.2rem; font-weight: bold; font-family: monospace; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .card { background-color: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-        .card .value { font-size: 1.6rem; font-weight: bold; font-family: monospace; }
-        .card .value.total { color: var(--primary); }
-        .card .value.cash { color: var(--success); }
 
-        .section-box { background-color: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .section-title { color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 15px; }
+        .x-sidebar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+        }
         
-        .flex-container { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        input, select { background: var(--bg-color); border: 1px solid var(--border); color: white; padding: 10px 12px; border-radius: 8px; }
-        
-        button { font-weight: bold; cursor: pointer; padding: 10px 18px; border-radius: 8px; border: none; }
-        .btn-success { background-color: var(--success); color: white; }
-        .btn-primary { background-color: var(--primary); color: #0f172a; }
+        .x-title {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
+        }
 
-        .table-container { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; text-align: right; }
-        th, td { padding: 12px 15px; border-bottom: 1px solid var(--border); }
-        th { background-color: rgba(255, 255, 255, 0.05); color: var(--primary); }
-
-        .live-tag { background: rgba(34, 197, 94, 0.1); color: var(--success); padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-        .x-sidebar { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
+        .x-timeline {
+            overflow-y: auto;
+            flex-grow: 1;
+            border-radius: 6px;
+            min-height: 500px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="header-info">
-            <h1>غرفة عمليات عبقرينو لتدفق السيولة 🧠🇺🇸</h1>
-            <p>تتبع حي لمؤشرات نيويورك وعقود المحفظة الاستثمارية | تحديث: ٢١ مايو ٢٠٢٦</p>
-        </div>
+        <h1>غرفة مراقبة الأسواق والسيولة 🧠🇺🇸</h1>
+        <p>شاشات حية ومباشرة من قلب البورصة الأمريكية بالتعاون مع TradingView</p>
     </header>
 
     <div class="main-layout">
-        <div class="dashboard-main">
-            <div class="live-market-bar">
-                <div class="market-ticker-card"><span>📊 S&P 500</span><span class="price" id="price_SPX">$7,418.90</span></div>
-                <div class="market-ticker-card"><span>🚀 Nasdaq 100</span><span class="price" id="price_NDX">$21,129.45</span></div>
-                <div class="market-ticker-card"><span>🟢 Nvidia (NVDA)</span><span class="price" id="price_NVDA">$918.81</span></div>
-                <div class="market-ticker-card"><span>🚗 Tesla (TSLA)</span><span class="price" id="price_TSLA">$185.08</span></div>
+        
+        <div class="widgets-grid">
+            
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                {
+                "symbols": [
+                    { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500 Index" },
+                    { "proName": "NASDAQ:NVDA", "title": "NVIDIA Corp." },
+                    { "proName": "NASDAQ:TSLA", "title": "TESLA Inc." },
+                    { "proName": "NASDAQ:QQQ", "title": "Invesco QQQ" }
+                ],
+                "isTransparent": true,
+                "showSymbolLogo": true,
+                "colorTheme": "dark",
+                "locale": "ar"
+                }
+                </script>
             </div>
 
-            <div class="grid">
-                <div class="card"><h3>إجمالي القيمة الكلية</h3><div class="value total" id="totalPortfolio">$100,000.00</div></div>
-                <div class="card"><h3>القيمة الحالية للعقود</h3><div class="value" id="investedValue">$0.00</div></div>
-                <div class="card"><h3>السيولة المتاحة (Cash)</h3><div class="value cash" id="cashValue">$100,000.00</div></div>
+            <div class="tradingview-widget-container" style="height: 600px;">
+                <div id="tradingview_advanced_chart" style="height: 100%;"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": "NASDAQ:NVDA",
+                    "interval": "D",
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "ar",
+                    "enable_publishing": false,
+                    "hide_side_toolbar": false,
+                    "allow_symbol_change": true,
+                    "container_id": "tradingview_advanced_chart"
+                });
+                </script>
             </div>
 
-            <div class="section-box">
-                <div class="section-title">💰 ضخ سيولة كاش (شحن الحساب)</div>
-                <div class="flex-container">
-                    <input type="number" id="liquidityInput" placeholder="المبلغ $..." value="10000">
-                    <button class="btn-success" onclick="addLiquidity()">تأكيد الإيداع +</button>
-                </div>
-            </div>
-
-            <div class="section-box">
-                <div class="section-title">⚡ تنفيذ أمر شراء مخصص (أسهم أو عقود Options)</div>
-                <div class="flex-container">
-                    <select id="assetTypeSelect">
-                        <option value="SPX">مؤشر S&P 500</option>
-                        <option value="NVDA">سهم أنفيديا (NVDA)</option>
-                        <option value="TSLA">سهم تسلا (TSLA)</option>
-                    </select>
-                    <input type="number" id="assetAmountInput" placeholder="مبلغ الدخول $..." value="5000">
-                    <button class="btn-primary" onclick="addNewAsset()">إرسال الأمر للمقاصة 🚀</button>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr><th>الأصل</th><th>رأس المال</th><th>سعر الدخول</th><th>السعر الحالي</th><th>الربح/الخسارة</th></tr>
-                    </thead>
-                    <tbody id="assetsTable"></tbody>
-                </table>
-            </div>
         </div>
 
         <div class="x-sidebar">
-            <div class="section-title">رادار عبقرينو الحي على X</div>
-            <a class="twitter-timeline" data-theme="dark" href="https://twitter.com/22hfc?ref_src=twsrc%5Etfw">تغريدات حية...</a>
+            <div class="x-title">📡 تحديثات الحساب اللحظية</div>
+            <div class="x-timeline">
+                <a class="twitter-timeline" data-theme="dark" data-chrome="noheader nofooter noborder transparent" href="https://twitter.com/22hfc?ref_src=twsrc%5Etfw">جاري تحميل رادار التغريدات الحية...</a>
+            </div>
         </div>
+
     </div>
 </div>
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script>
-    // الحسبة البرمجية الصحيحة اللي كانت مفقودة وتسبب ظهور الأصفار
-    let cash = 100000;
-    let invested = 0;
-    let assets = [];
-
-    const prices = { SPX: 7418.90, NVDA: 918.81, TSLA: 185.08 };
-
-    function updateUI() {
-        invested = assets.reduce((sum, asset) => sum + asset.amount, 0);
-        let total = cash + invested;
-
-        document.getElementById('cashValue').innerText = `$${cash.toLocaleString()}`;
-        document.getElementById('investedValue').innerText = `$${invested.toLocaleString()}`;
-        document.getElementById('totalPortfolio').innerText = `$${total.toLocaleString()}`;
-
-        const tbody = document.getElementById('assetsTable');
-        tbody.innerHTML = assets.length === 0 ? 
-            `<tr><td colspan="5" style="text-align:center;color:#64748b;">المحفظة خالية.. نفذ أمر شراء.</td></tr>` : '';
-        
-        assets.forEach(asset => {
-            tbody.innerHTML += `<tr>
-                <td><strong>${asset.name}</strong></td>
-                <td>$${asset.amount}</td>
-                <td>$${asset.entry}</td>
-                <td>$${prices[asset.name]}</td>
-                <td style="color:#22c55e;">+0.00%</td>
-            </tr>`;
-        });
-    }
-
-    function addLiquidity() {
-        let val = parseFloat(document.getElementById('liquidityInput').value) || 0;
-        cash += val;
-        updateUI();
-    }
-
-    function addNewAsset() {
-        let type = document.getElementById('assetTypeSelect').value;
-        let amt = parseFloat(document.getElementById('assetAmountInput').value) || 0;
-        if(amt <= cash && amt > 0) {
-            cash -= amt;
-            assets.push({name: type, amount: amt, entry: prices[type]});
-            updateUI();
-        } else {
-            alert("السيولة المتاحة لا تكفي!");
-        }
-    }
-    updateUI();
-</script>
 </body>
 </html>

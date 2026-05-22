@@ -70,26 +70,49 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
+            margin-bottom: 20px;
         }
 
-        /* خانات المقاومة والدعم */
+        /* لوحة التحكم وإدخال البيانات الحية */
+        .input-panel {
+            background: #171b26;
+            border: 1px dashed var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .input-group label { width: 80px; font-weight: bold; color: var(--primary); }
+        .input-group input {
+            background: #0c101b;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        /* عرض مستويات المقاصة والجلسة */
         .analysis-levels {
             margin-top: 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
             text-align: right;
         }
 
-        .level-item { background: rgba(56, 189, 248, 0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .level-item { background: rgba(56, 189, 248, 0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
         .level-item strong { color: var(--primary); display: block; margin-bottom: 5px; }
+        .level-val { font-size: 1.3rem; font-weight: bold; color: #fff; }
 
         /* منطقة رفع وعرض الشارت */
-        .upload-zone {
-            text-align: center;
-        }
-
-        /* زر الرفع الاحترافي */
+        .upload-zone { text-align: center; }
         .custom-file-upload {
             display: inline-block;
             padding: 10px 20px;
@@ -101,12 +124,11 @@
             margin-bottom: 15px;
             transition: background 0.2s;
         }
-        .custom-file-upload:hover { background-color: #1a4fd4; }
         input[type="file"] { display: none; }
 
         .image-preview-container {
             width: 100%;
-            min-height: 300px;
+            min-height: 250px;
             border: 2px dashed var(--border);
             border-radius: 8px;
             display: flex;
@@ -114,21 +136,9 @@
             justify-content: center;
             overflow: hidden;
             background: #070a12;
-            position: relative;
         }
-
-        .image-preview-container img {
-            width: 100%;
-            height: auto;
-            display: none;
-            object-fit: contain;
-        }
-
-        .placeholder-text {
-            color: #4b5266;
-            font-size: 1rem;
-            padding: 20px;
-        }
+        .image-preview-container img { width: 100%; height: auto; display: none; object-fit: contain; }
+        .placeholder-text { color: #4b5266; font-size: 0.95rem; padding: 20px; }
 
         /* شريط النصائح */
         .ticker-footer {
@@ -140,18 +150,8 @@
             overflow: hidden;
             white-space: nowrap;
         }
-
-        .ticker-text {
-            display: inline-block;
-            padding-right: 100%;
-            animation: ticker 25s linear infinite;
-            font-weight: bold;
-        }
-
-        @keyframes ticker {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100%, 0); }
-        }
+        .ticker-text { display: inline-block; padding-right: 100%; animation: ticker 25s linear infinite; font-weight: bold; }
+        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(100%, 0); } }
     </style>
 </head>
 <body>
@@ -170,17 +170,32 @@
 
     <div class="main-content">
         <div class="right-side">
-            <div class="box" style="height: 450px; margin-bottom: 20px; padding: 10px;">
+            <div class="box" style="height: 480px; padding: 10px;">
                 <div id="tradingview_spx" style="height: 100%;"></div>
             </div>
 
             <div class="box">
                 <h3 style="margin-top:0; color: #fff;">📊 مستويات المقاصة والجلسة اليومية</h3>
                 <div class="analysis-levels">
-                    <div class="level-item"><strong>المقاومة:</strong> 7,465</div>
-                    <div class="level-item"><strong>الدعم:</strong> 7,389</div>
-                    <div class="level-item"><strong>المتوسط:</strong> 7,420</div>
-                    <div class="level-item"><strong>الأهداف:</strong> 7,510</div>
+                    <div class="level-item"><strong>المقاومة</strong><div class="level-val" id="val-resistance">7,465</div></div>
+                    <div class="level-item"><strong>المتوسط</strong><div class="level-val" id="val-pivot">7,420</div></div>
+                    <div class="level-item"><strong>الدعم</strong><div class="level-val" id="val-support">7,389</div></div>
+                </div>
+
+                <div class="input-panel">
+                    <h4 style="margin: 0 0 10px 0; color: var(--primary);">⚙️ تحديث المستويات يدوياً (اكتب هنا لتتغير بالأعلى فوراً):</h4>
+                    <div class="input-group">
+                        <label>المقاومة:</label>
+                        <input type="text" id="input-resistance" value="7,465" oninput="updateValues()">
+                    </div>
+                    <div class="input-group">
+                        <label>المتوسط:</label>
+                        <input type="text" id="input-pivot" value="7,420" oninput="updateValues()">
+                    </div>
+                    <div class="input-group">
+                        <label>الدعم:</label>
+                        <input type="text" id="input-support" value="7,389" oninput="updateValues()">
+                    </div>
                 </div>
             </div>
         </div>
@@ -188,16 +203,22 @@
         <div class="left-side">
             <div class="box upload-zone">
                 <h3 style="margin-top:0; color: #fff;">🖼️ تحليل اليوم</h3>
-                
                 <label class="custom-file-upload">
                     <input type="file" accept="image/*" onchange="previewImage(event)">
                     📁 اختر شارت التحليل من جهازك
                 </label>
-
                 <div class="image-preview-container">
                     <span class="placeholder-text" id="placeholder-msg">اضغط على الزر بالأعلى لرفع شارت تحليل اليوم مباشرة من جهازك</span>
                     <img id="output-image" alt="شارت تحليل اليوم">
                 </div>
+            </div>
+
+            <div class="box" style="padding: 15px; text-align: center;">
+                <h3 style="margin-top:0; color: #fff;">📈 شارت الموجات والحركة التكتيكية</h3>
+                <div style="border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
+                    <img src="https://raw.githubusercontent.com/FF140503/abqarino/main/image_edba25.png" alt="شارت تكتيكي" style="width: 100%; height: auto; display: block;">
+                </div>
+                <p style="font-size: 0.85rem; color: #787b86; margin-top: 10px; margin-bottom: 0;">مخطط المسار الاستباقي ومناطق تصفية السيولة العمياء</p>
             </div>
         </div>
     </div>
@@ -214,7 +235,7 @@
 new TradingView.widget({
   "autosize": true,
   "symbol": "CAPITALCOM:SPX500",
-  "interval": "D",
+  "interval": "15",
   "timezone": "Etc/UTC",
   "theme": "dark",
   "style": "1",
@@ -222,7 +243,7 @@ new TradingView.widget({
   "container_id": "tradingview_spx"
 });
 
-// دالة تشغيل وإدارة الساعات الحية
+// إدارة الساعات الرقمية بنظام جدارة
 function updateClocks() {
     const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Riyadh', ...options});
@@ -233,7 +254,7 @@ function updateClocks() {
 setInterval(updateClocks, 1000);
 updateClocks();
 
-// دالة قراءة وعرض الصورة الحية من جهازك مباشرة
+// رفع وعرض صورة شارت تحليل اليوم من الجهاز فوراً
 function previewImage(event) {
     const reader = new FileReader();
     reader.onload = function() {
@@ -244,6 +265,13 @@ function previewImage(event) {
         placeholder.style.display = 'none';
     }
     reader.readAsDataURL(event.target.files[0]);
+}
+
+// دالة التحديث اللحظي لخانات الدعم والمقاومة والمتوسط
+function updateValues() {
+    document.getElementById('val-resistance').innerText = document.getElementById('input-resistance').value;
+    document.getElementById('val-pivot').innerText = document.getElementById('input-pivot').value;
+    document.getElementById('val-support').innerText = document.getElementById('input-support').value;
 }
 </script>
 

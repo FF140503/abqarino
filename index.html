@@ -12,6 +12,7 @@
             --text: #d1d4dc;
             --primary: #38bdf8;
             --accent: #2962ff;
+            --success: #22c55e;
         }
 
         body {
@@ -35,7 +36,7 @@
 
         header h1 { margin: 0; color: var(--primary); font-size: 2rem; }
 
-        /* قسم الساعات بنظام جدارة */
+        /* ساعات جدارة الرقمية */
         .clocks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -49,12 +50,13 @@
             border-radius: 10px;
             padding: 15px;
             text-align: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .clock-label { color: var(--primary); font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: block; }
-        .clock-time { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: bold; color: #fff; }
+        .clock-time { font-family: 'Courier New', Courier, monospace; font-size: 2rem; font-weight: bold; color: #fff; background: #070a12; padding: 5px; border-radius: 6px; border: 1px solid #1e222d; display: inline-block; width: 80%; }
 
-        /* توزيع المحتوى */
+        /* توزيع الواجهة */
         .main-content {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -67,10 +69,10 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
         }
 
-        /* خانة التحليل النصي */
+        /* خانات المقاومة والدعم */
         .analysis-levels {
             margin-top: 15px;
             display: grid;
@@ -79,18 +81,56 @@
             text-align: right;
         }
 
-        .level-item { background: rgba(56, 189, 248, 0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+        .level-item { background: rgba(56, 189, 248, 0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
         .level-item strong { color: var(--primary); display: block; margin-bottom: 5px; }
 
-        /* مساحة الصورة المرفوعة */
-        .image-box img {
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid var(--accent);
-            margin-top: 10px;
+        /* منطقة رفع وعرض الشارت */
+        .upload-zone {
+            text-align: center;
         }
 
-        /* شريط النصائح السفلي */
+        /* زر الرفع الاحترافي */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+        .custom-file-upload:hover { background-color: #1a4fd4; }
+        input[type="file"] { display: none; }
+
+        .image-preview-container {
+            width: 100%;
+            min-height: 300px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #070a12;
+            position: relative;
+        }
+
+        .image-preview-container img {
+            width: 100%;
+            height: auto;
+            display: none;
+            object-fit: contain;
+        }
+
+        .placeholder-text {
+            color: #4b5266;
+            font-size: 1rem;
+            padding: 20px;
+        }
+
+        /* شريط النصائح */
         .ticker-footer {
             background: var(--accent);
             color: white;
@@ -104,7 +144,7 @@
         .ticker-text {
             display: inline-block;
             padding-right: 100%;
-            animation: ticker 20s linear infinite;
+            animation: ticker 25s linear infinite;
             font-weight: bold;
         }
 
@@ -118,7 +158,7 @@
 
 <div class="container">
     <header>
-        <h1>يوميات عبقرينو التحليلية 🧠🇺🇸</h1>
+        <h1>غرفة عمليات عبقرينو لتدفق السيولة 🧠🇺🇸</h1>
     </header>
 
     <div class="clocks-grid">
@@ -130,12 +170,12 @@
 
     <div class="main-content">
         <div class="right-side">
-            <div class="box" style="height: 450px; margin-bottom: 20px;">
+            <div class="box" style="height: 450px; margin-bottom: 20px; padding: 10px;">
                 <div id="tradingview_spx" style="height: 100%;"></div>
             </div>
 
             <div class="box">
-                <h3 style="margin-top:0; color: #fff;">📊 مستويات الجلسة اليومية</h3>
+                <h3 style="margin-top:0; color: #fff;">📊 مستويات المقاصة والجلسة اليومية</h3>
                 <div class="analysis-levels">
                     <div class="level-item"><strong>المقاومة:</strong> 7,465</div>
                     <div class="level-item"><strong>الدعم:</strong> 7,389</div>
@@ -146,19 +186,25 @@
         </div>
 
         <div class="left-side">
-            <div class="box image-box">
-                <h3 style="margin-top:0; color: #fff; text-align: center;">🖼️ شارت التحليل المرفوع</h3>
-                <img src="https://via.placeholder.com/400x500?text=يرجى+رفع+صورة+الشارت+هنا" alt="تحليل اليوم">
-                <p style="font-size: 0.85rem; color: #787b86; margin-top: 10px; text-align: center;">
-                    هنا تظهر صورة تحليلك اليدوي لليوم
-                </p>
+            <div class="box upload-zone">
+                <h3 style="margin-top:0; color: #fff;">🖼️ تحليل اليوم</h3>
+                
+                <label class="custom-file-upload">
+                    <input type="file" accept="image/*" onchange="previewImage(event)">
+                    📁 اختر شارت التحليل من جهازك
+                </label>
+
+                <div class="image-preview-container">
+                    <span class="placeholder-text" id="placeholder-msg">اضغط على الزر بالأعلى لرفع شارت تحليل اليوم مباشرة من جهازك</span>
+                    <img id="output-image" alt="شارت تحليل اليوم">
+                </div>
             </div>
         </div>
     </div>
 
     <div class="ticker-footer">
         <div class="ticker-text">
-            نصيحة عبقرينو اليوم: "السوق لا يعطيك ما تريد، بل يعطيك ما يستحق انضباطك.. التزم بالوقف والأهداف دائماً." 🦅
+            نصيحة عبقرينو اليوم: "السوق لا يعطيك ما تريد، بل يعطيك ما يستحق انضباطك.. التزم بالوقف والأهداف دائماً ولا تلاحق السعر عند الاندفاع." 🦅
         </div>
     </div>
 </div>
@@ -176,7 +222,7 @@ new TradingView.widget({
   "container_id": "tradingview_spx"
 });
 
-// دالة الساعات الحية
+// دالة تشغيل وإدارة الساعات الحية
 function updateClocks() {
     const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Riyadh', ...options});
@@ -186,6 +232,19 @@ function updateClocks() {
 }
 setInterval(updateClocks, 1000);
 updateClocks();
+
+// دالة قراءة وعرض الصورة الحية من جهازك مباشرة
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById('output-image');
+        const placeholder = document.getElementById('placeholder-msg');
+        output.src = reader.result;
+        output.style.display = 'block';
+        placeholder.style.display = 'none';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
 </script>
 
 </body>

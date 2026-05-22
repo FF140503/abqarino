@@ -282,3 +282,23 @@ function loadUserChart(event) {
     reader.onload = function() {
         const imgElement = document.getElementById('main-analysis-view');
         const placeholder = document.getElementById('upload-placeholder');
+        imgElement.src = reader.result;
+        imgElement.style.display = 'block';
+        placeholder.style.display = 'none';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+// دالة المزامنة والتحديث الفوري للأرقام والأهداف في لوحة العرض
+function syncTechnicalData() {
+    document.getElementById('live-res').innerText = document.getElementById('in-res').value;
+    document.getElementById('live-piv').innerText = document.getElementById('in-piv').value;
+    document.getElementById('live-sup').innerText = document.getElementById('in-sup').value;
+    document.getElementById('live-t1').innerText = document.getElementById('in-t1').value;
+    document.getElementById('live-t2').innerText = document.getElementById('in-t2').value;
+    document.getElementById('live-t3').innerText = document.getElementById('in-t3').value;
+}
+</script>
+
+</body>
+</html>

@@ -27,7 +27,6 @@
 
         .container { max-width: 1400px; margin: 0 auto; }
 
-        /* الهيدر الاحترافي الجديد لمنع التداخل */
         header {
             display: flex;
             justify-content: space-between;
@@ -67,7 +66,6 @@
         .audio-btn:hover { opacity: 0.9; transform: scale(1.03); }
         .audio-status { font-size: 0.85rem; color: #787b86; font-weight: bold; }
 
-        /* شبكة الساعات الرقمية الحية */
         .clocks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -87,7 +85,6 @@
         .clock-label { color: var(--primary); font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; display: block; }
         .clock-time { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: bold; color: #fff; background: #070a12; padding: 6px; border-radius: 8px; border: 1px solid #1e222d; display: inline-block; width: 85%; text-align: center; }
 
-        /* تقسيم الواجهة بشكل مريح وبدون تداخل */
         .main-layout {
             display: grid;
             grid-template-columns: 2.5fr 1.5fr;
@@ -107,7 +104,6 @@
 
         .box-title { margin-top: 0; margin-bottom: 15px; color: #fff; text-align: right; font-size: 1.25rem; font-weight: bold; border-bottom: 1px solid #1e222d; padding-bottom: 10px; }
 
-        /* قسم رفع وعرض شارت التحليل */
         .upload-container { text-align: center; }
         .custom-file-upload {
             display: none; 
@@ -139,7 +135,6 @@
         .image-display-zone img { width: 100%; height: auto; display: none; object-fit: contain; }
         .placeholder-text { color: #4b5266; font-size: 1rem; padding: 20px; }
 
-        /* شبكة عرض مستويات اليوم الحية */
         .display-levels-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -163,7 +158,6 @@
 
         .level-num { font-size: 1.5rem; font-weight: bold; color: #fff; font-family: 'Courier New', Courier, monospace; }
 
-        /* مدخلات لوحة تحكم الإدارة السحابية */
         .control-panel { display: none; } 
         .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; text-align: right; }
         .input-group label { font-size: 0.9rem; font-weight: bold; color: var(--text); }
@@ -179,7 +173,6 @@
         .input-group input:focus { border-color: var(--primary); outline: none; }
         .targets-inputs { border-top: 1px dashed var(--border); padding-top: 15px; margin-top: 15px; }
 
-        /* صندوق فك القفل بالرقم السري */
         .admin-lock-box {
             background: #1e222d;
             border: 1px solid var(--border);
@@ -212,7 +205,6 @@
         }
         .admin-lock-box button:hover { opacity: 0.9; }
 
-        /* شريط النصائح السفلي المتحرك */
         .ticker-footer {
             background: var(--accent);
             color: white;
@@ -235,7 +227,7 @@
     <header>
         <h1>منصة <span>عبقرينو</span> الرقمية 🧠🇺🇸</h1>
         <div class="audio-player-container">
-            <span class="audio-status" id="audio-status-text">الصوت مغلق 🔇</span>
+            <span class="audio-status" id="audio-status-text">الصومت مغلق 🔇</span>
             <button class="audio-btn" id="audio-control-btn" onclick="toggleAudio()">▶️ تشغيل الشيلة</button>
         </div>
     </header>
@@ -253,7 +245,7 @@
                 <div class="box-title">🖼️ شارت التحليل والموجات الفنية</div>
                 
                 <label class="custom-file-upload" id="secure-upload-btn">
-                    <input type="file" accept="image/*" onchange="loadUserChart(event)">
+                    <input type="file" accept="image/*" onchange="compressAndUploadChart(event)">
                     📁 اختر شارت التحليل من جهازك الحين
                 </label>
                 
@@ -339,11 +331,9 @@
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script type="text/javascript">
 // 1. مفاتيح الربط السحابي بقاعدة بيانات المزامنة الخاصة بك
-// ⚠️ استبدل ما بين القوسين ببياناتك الحقيقية من لوحة Supabase API Settings:
 const SUPABASE_URL = "https://your-project-id.supabase.co"; 
 const SUPABASE_KEY = "your-anon-public-key";
 
-// دالة الاتصال المباشر والمستقر بقاعدة البيانات
 async function supabaseFetch(endpoint, options = {}) {
     const headers = {
         "apikey": SUPABASE_KEY,
@@ -355,7 +345,6 @@ async function supabaseFetch(endpoint, options = {}) {
     return response.json();
 }
 
-// 2. إرساء شارت التداول المباشر من TradingView بمقاس احترافي متناسق
 new TradingView.widget({
   "autosize": true,
   "symbol": "CAPITALCOM:SPX500",
@@ -367,7 +356,6 @@ new TradingView.widget({
   "container_id": "tradingview_spx_live"
 });
 
-// 3. تحديث مصفوفة الساعات العالمية الحية بدقة تامة
 function runClocks() {
     const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Riyadh', ...options});
@@ -378,7 +366,6 @@ function runClocks() {
 setInterval(runClocks, 1000);
 runClocks();
 
-// 4. استرجاع البيانات الفوري من السحاب فور تحميل منصة العرض لجميع الزوار
 window.addEventListener('DOMContentLoaded', fetchCloudData);
 
 async function fetchCloudData() {
@@ -387,7 +374,6 @@ async function fetchCloudData() {
         if (data && data.length > 0) {
             const cloud = data[0];
             
-            // مزامنة أرقام لوحة المزامنة الداخلية للمشرف
             document.getElementById('in-res').value = cloud.resistance || '';
             document.getElementById('in-piv').value = cloud.pivot || '';
             document.getElementById('in-sup').value = cloud.support || '';
@@ -395,7 +381,6 @@ async function fetchCloudData() {
             document.getElementById('in-t2').value = cloud.target2 || '';
             document.getElementById('in-t3').value = cloud.target3 || '';
 
-            // مزامنة لوحة العرض المباشرة أمام المتابعين والزوار
             document.getElementById('live-res').innerText = cloud.resistance || '-';
             document.getElementById('live-piv').innerText = cloud.pivot || '-';
             document.getElementById('live-sup').innerText = cloud.support || '-';
@@ -403,7 +388,6 @@ async function fetchCloudData() {
             document.getElementById('live-t2').innerText = cloud.target2 || '-';
             document.getElementById('live-t3').innerText = cloud.target3 || '-';
 
-            // عرض وتحميل صورة الشارت السحابية المخزنة بدقة عالية دون تداخلات
             const imgElement = document.getElementById('main-analysis-view');
             const placeholder = document.getElementById('upload-placeholder');
             if (cloud.chart_image && cloud.chart_image.length > 10) {
@@ -421,7 +405,6 @@ async function fetchCloudData() {
     }
 }
 
-// 5. مزامنة وحفظ الأرقام الفنية سحابياً فور كتابتها
 async function pushDataToCloud() {
     const res = document.getElementById('in-res').value;
     const piv = document.getElementById('in-piv').value;
@@ -454,40 +437,61 @@ async function pushDataToCloud() {
     }
 }
 
-// 6. تشفير الشارت ورفعه سحابياً ليعمل على كافة متصفحات الجوال والكمبيوتر
-function loadUserChart(event) {
+// 🛠️ دالة المزامنة والضغط التلقائي للصور لمنع مشكلة الحجم والخطأ السحابي
+function compressAndUploadChart(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = async function() {
-        const imgElement = document.getElementById('main-analysis-view');
-        const placeholder = document.getElementById('upload-placeholder');
-        
-        imgElement.src = reader.result;
-        imgElement.style.display = 'block';
-        placeholder.style.display = 'none';
-        
-        try {
-            placeholder.innerText = "جاري مزامنة ورفع الشارت الجديد سحابياً الحين...";
-            placeholder.style.display = 'block';
-            imgElement.style.display = 'none';
-
-            await supabaseFetch("dashboard_data?id=eq.1", {
-                method: "PATCH",
-                body: JSON.stringify({ chart_image: reader.result })
-            });
-
-            placeholder.style.display = 'none';
-            imgElement.style.display = 'block';
-        } catch(e) {
-            alert("حدث خطأ، يرجى التأكد من أن حجم الصورة مناسب للاستضافة السحابية.");
-        }
-    }
+    reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = function() {
+            // إنشاء لوحة رسم افتراضية لضغط الشارت وإبقاء جودته عالية
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // تحديد أبعاد متناسقة وخفيفة جداً للسيرفر السحابي
+            const maxWidth = 1000; 
+            const scale = maxWidth / img.width;
+            canvas.width = maxWidth;
+            canvas.height = img.height * scale;
+            
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // ضغط الصورة بصيغة JPEG الخفيفة وبجودة 70% (ممتازة للشارتات)
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            
+            saveChartToCloud(compressedBase64);
+        };
+    };
     reader.readAsDataURL(file);
 }
 
-// 7. دالة التحكم في مشغل شيلات الخلفية والتحكم الصوتي
+async function saveChartToCloud(imageData) {
+    const imgElement = document.getElementById('main-analysis-view');
+    const placeholder = document.getElementById('upload-placeholder');
+    
+    try {
+        placeholder.innerText = "جاري ضغط ومزامنة الشارت الجديد سحابياً الحين...";
+        placeholder.style.display = 'block';
+        imgElement.style.display = 'none';
+
+        await supabaseFetch("dashboard_data?id=eq.1", {
+            method: "PATCH",
+            body: JSON.stringify({ chart_image: imageData })
+        });
+
+        imgElement.src = imageData;
+        placeholder.style.display = 'none';
+        imgElement.style.display = 'block';
+    } catch(e) {
+        alert("حدث خطأ أثناء الرفع السحابي، يرجى المحاولة مرة أخرى.");
+        placeholder.style.display = 'none';
+        imgElement.style.display = 'block';
+    }
+}
+
 function toggleAudio() {
     const audio = document.getElementById('bg-audio');
     const btn = document.getElementById('audio-control-btn');
@@ -502,20 +506,19 @@ function toggleAudio() {
         audio.pause();
         btn.innerText = "▶️ تشغيل الشيلة";
         btn.classList.remove('pause');
-        statusText.innerText = "الصوت مغلق 🔇";
+        statusText.innerText = "الصومت مغلق 🔇";
     }
 }
 
-// 8. جدار التحقق وصلاحيات الدخول للمشرف والأدمن
 function checkAdminPassword() {
     const enteredPass = document.getElementById('password-input').value;
-    const correctPass = "1234"; // 🛠️ يمكنك استبدال رقمك السري الحصري هنا هنا
+    const correctPass = "1234"; 
 
     if (enteredPass === correctPass) {
         document.getElementById('secure-control-panel').style.display = 'block';
         document.getElementById('secure-upload-btn').style.display = 'inline-block';
         document.getElementById('auth-box').style.display = 'none';
-        alert('أهلاً بك يا أبو مهند، تم فتح صلاحيات التحكم والمزامنة السحابية المباشرة للموقع بنجاح!');
+        alert('أهلاً بك يا أبو مهند، تم تفعيل صلاحيات التحكم والرفع السحابي الذكي بنجاح!');
     } else {
         alert('الرمز السري الذي أدخلته غير صحيح، حاول مرة أخرى.');
     }

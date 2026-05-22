@@ -75,9 +75,9 @@
         }
 
         /* شاشة عرض التحليل المرفوع */
-        .upload-container { text-align: center; }
+        .upload-container { text-align: center; position: relative; }
         .custom-file-upload {
-            display: inline-block;
+            display: none; /* مخفي افتراضياً ولا يظهر إلا بالرقم السري */
             padding: 10px 20px;
             cursor: pointer;
             background-color: var(--accent);
@@ -129,7 +129,8 @@
 
         .level-num { font-size: 1.4rem; font-weight: bold; color: #fff; font-family: 'Courier New', Courier, monospace; }
 
-        /* لوحة التحديث والمدخلات */
+        /* قفل لوحة التحكم */
+        .control-panel { display: none; } 
         .control-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
         .input-group label { font-size: 0.85rem; font-weight: bold; color: var(--text); }
@@ -143,6 +144,37 @@
         }
         .input-group input:focus { border-color: var(--primary); outline: none; }
         .targets-inputs { border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 12px; }
+
+        /* صندوق الدخول بالرقم السري الرئيسي */
+        .admin-lock-box {
+            background: #1e222d;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .admin-lock-box input {
+            background: #0c101b;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1rem;
+            width: 60%;
+            margin-bottom: 10px;
+        }
+        .admin-lock-box button {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .admin-lock-box button:hover { opacity: 0.9; }
 
         /* شريط النصائح */
         .ticker-footer {
@@ -177,12 +209,14 @@
             
             <div class="box upload-container">
                 <h3 style="margin-top:0; color: #fff; text-align: right; font-size: 1.2rem;">🖼️ تحليل اليوم</h3>
-                <label class="custom-file-upload">
+                
+                <label class="custom-file-upload" id="secure-upload-btn">
                     <input type="file" accept="image/*" onchange="loadUserChart(event)">
                     📁 ارفع شارت التحليل من جهازك الحين
                 </label>
+                
                 <div class="image-display-zone">
-                    <span class="placeholder-text" id="upload-placeholder">اضغط على الزر بالأعلى لرفع صورة الشارت المحدثة من جهازك مباشرة.</span>
+                    <span class="placeholder-text" id="upload-placeholder">انتظر رفع صورة الشارت المحدثة للجلسة الحالية...</span>
                     <img id="main-analysis-view" alt="شارت تحليل اليوم">
                 </div>
             </div>
@@ -195,6 +229,13 @@
         </div>
 
         <div class="control-side">
+            <div class="admin-lock-box" id="auth-box">
+                <h4 style="margin: 0 0 10px 0; color: var(--primary);">🔐 لوحة التحكم الخاصة بالمحلل</h4>
+                <input type="password" id="password-input" placeholder="أدخل الرقم السري للتحكم">
+                <br>
+                <button onclick="checkAdminPassword()">تفعيل اللوحة</button>
+            </div>
+
             <div class="box">
                 <h3 style="margin-top: 0; font-size: 1.2rem; color: #fff;">📊 مناطق اليوم</h3>
                 
@@ -211,9 +252,9 @@
                 </div>
             </div>
 
-            <div class="box control-panel">
+            <div class="box control-panel" id="secure-control-panel">
                 <h3>⚙️ تحديث البيانات والأهداف يدوياً</h3>
-                <p style="font-size: 0.85rem; color: #787b86; margin-top: -5px; margin-bottom: 15px;">اكتب الأرقام هنا لتتغير وتظهر فوراً على لوحة العرض أمام المتابعين:</p>
+                <p style="font-size: 0.85rem; color: #787b86; margin-top: -5px; margin-bottom: 15px;">اكتب الأرقام هنا لتتغير وتظهر فوراً وتُحفظ تلقائياً:</p>
                 
                 <div class="input-group">
                     <label>المقاومة:</label>
@@ -267,7 +308,6 @@ new TradingView.widget({
   "container_id": "tradingview_spx_live"
 });
 
-// تشغيل الساعات الرقمية الحية
 function runClocks() {
     const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Riyadh', ...options});
@@ -278,27 +318,85 @@ function runClocks() {
 setInterval(runClocks, 1000);
 runClocks();
 
-// رفع وقراءة صورة التحليل اليومي الحركي مباشرة من جهازك
+// دالة رفع الصورة وحفظها بالذاكرة المحلية للمتصفح
 function loadUserChart(event) {
     const reader = new FileReader();
     reader.onload = function() {
         const imgElement = document.getElementById('main-analysis-view');
         const placeholder = document.getElementById('upload-placeholder');
+        
         imgElement.src = reader.result;
         imgElement.style.display = 'block';
         placeholder.style.display = 'none';
+        
+        // حفظ الصورة مشفرة داخل المتصفح
+        try {
+            localStorage.setItem('saved_chart', reader.result);
+        } catch(e) {
+            console.log("الصورة حجمها كبير جداً على ذاكرة المتصفح المحلية، يفضل ضغطها.");
+        }
     }
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// دالة المزامنة والتحديث الفوري للأرقام والأهداف في لوحة العرض
+// دالة مزامنة الأرقام وحفظها التلقائي بالذاكرة المحلية
 function syncTechnicalData() {
-    document.getElementById('live-res').innerText = document.getElementById('in-res').value;
-    document.getElementById('live-piv').innerText = document.getElementById('in-piv').value;
-    document.getElementById('live-sup').innerText = document.getElementById('in-sup').value;
-    document.getElementById('live-t1').innerText = document.getElementById('in-t1').value;
-    document.getElementById('live-t2').innerText = document.getElementById('in-t2').value;
-    document.getElementById('live-t3').innerText = document.getElementById('in-t3').value;
+    const res = document.getElementById('in-res').value;
+    const piv = document.getElementById('in-piv').value;
+    const sup = document.getElementById('in-sup').value;
+    const t1 = document.getElementById('in-t1').value;
+    const t2 = document.getElementById('in-t2').value;
+    const t3 = document.getElementById('in-t3').value;
+
+    document.getElementById('live-res').innerText = res;
+    document.getElementById('live-piv').innerText = piv;
+    document.getElementById('live-sup').innerText = sup;
+    document.getElementById('live-t1').innerText = t1;
+    document.getElementById('live-t2').innerText = t2;
+    document.getElementById('live-t3').innerText = t3;
+
+    // حفظ المدخلات
+    localStorage.setItem('saved_res', res);
+    localStorage.setItem('saved_piv', piv);
+    localStorage.setItem('saved_sup', sup);
+    localStorage.setItem('saved_t1', t1);
+    localStorage.setItem('saved_t2', t2);
+    localStorage.setItem('saved_t3', t3);
+}
+
+// استرجاع البيانات المحفوظة فور تحميل الصفحة
+window.onload = function() {
+    if(localStorage.getItem('saved_res')) {
+        document.getElementById('in-res').value = localStorage.getItem('saved_res');
+        document.getElementById('in-piv').value = localStorage.getItem('saved_piv');
+        document.getElementById('in-sup').value = localStorage.getItem('saved_pup') || localStorage.getItem('saved_sup');
+        document.getElementById('in-t1').value = localStorage.getItem('saved_t1');
+        document.getElementById('in-t2').value = localStorage.getItem('saved_t2');
+        document.getElementById('in-t3').value = localStorage.getItem('saved_t3');
+        syncTechnicalData();
+    }
+    
+    if(localStorage.getItem('saved_chart')) {
+        const imgElement = document.getElementById('main-analysis-view');
+        const placeholder = document.getElementById('upload-placeholder');
+        imgElement.src = localStorage.getItem('saved_chart');
+        imgElement.style.display = 'block';
+        placeholder.style.display = 'none';
+    }
+}
+
+// نظام التحقق السري لفتح اللوحة
+function checkAdminPassword() {
+    const enteredPass = document.getElementById('password-input').value;
+    const correctPass = "1234"; // 🛠️ غير الرقم 1234 لرمزك السري الخاص هنا
+
+    if (enteredPass === correctPass) {
+        document.getElementById('secure-control-panel').style.display = 'block';
+        document.getElementById('secure-upload-btn').style.display = 'inline-block';
+        document.getElementById('auth-box').style.display = 'none';
+    } else {
+        alert('الرمز السري خطأ! حاول مجدداً.');
+    }
 }
 </script>
 

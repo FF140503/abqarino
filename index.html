@@ -2,61 +2,191 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>غرفة عمليات عبقرينو 🧠</title>
     <style>
-        body { background: #0c101b; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .box { background: #131722; padding: 15px; border-radius: 12px; border: 1px solid #2a2e39; }
-        .chart-box { height: 400px; }
-        .clock-box { text-align: center; }
-        .clock { font-size: 1.2rem; margin: 10px 0; color: #38bdf8; }
-        .tweet-section { margin-top: 20px; text-align: center; }
-        .tweet-section img { max-width: 100%; border-radius: 8px; border: 2px solid #2962ff; }
-        .footer-ticker { background: #1e293b; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; }
+        :root {
+            --bg: #0c101b;
+            --card: #131722;
+            --border: #2a2e39;
+            --text: #d1d4dc;
+            --primary: #38bdf8;
+            --accent: #2962ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        header h1 { margin: 0; color: var(--primary); font-size: 2rem; }
+
+        /* قسم الساعات بنظام جدارة */
+        .clocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .clock-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .clock-label { color: var(--primary); font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: block; }
+        .clock-time { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: bold; color: #fff; }
+
+        /* توزيع المحتوى */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
+
+        .box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        /* خانة التحليل النصي */
+        .analysis-levels {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: right;
+        }
+
+        .level-item { background: rgba(56, 189, 248, 0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+        .level-item strong { color: var(--primary); display: block; margin-bottom: 5px; }
+
+        /* مساحة الصورة المرفوعة */
+        .image-box img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            margin-top: 10px;
+        }
+
+        /* شريط النصائح السفلي */
+        .ticker-footer {
+            background: var(--accent);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-text {
+            display: inline-block;
+            padding-right: 100%;
+            animation: ticker 20s linear infinite;
+            font-weight: bold;
+        }
+
+        @keyframes ticker {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100%, 0); }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header"><h1>يوميات عبقرينو التحليلية 🧠</h1></div>
 
-        <div class="grid-layout">
-            <div class="box chart-box">
-                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                <script type="text/javascript">
-                new TradingView.widget({"autosize": true, "symbol": "CAPITALCOM:SPX500", "theme": "dark", "style": "1", "locale": "ar", "container_id": "tv_chart"});
-                </script>
-                <div id="tv_chart" style="height: 100%;"></div>
-            </div>
+<div class="container">
+    <header>
+        <h1>يوميات عبقرينو التحليلية 🧠🇺🇸</h1>
+    </header>
 
-            <div class="box clock-box">
-                <h3>توقيت الأسواق العالمية</h3>
-                <div>السعودية: <span class="clock" id="sa-time"></span></div>
-                <div>لندن: <span class="clock" id="london-time"></span></div>
-                <div>نيويورك: <span class="clock" id="ny-time"></span></div>
-                <div>آسيا (طوكيو): <span class="clock" id="tokyo-time"></span></div>
-            </div>
-        </div>
-
-        <div class="tweet-section">
-            <h3>تحليل اليوم</h3>
-            <img src="رابط_صورتك_هنا" alt="ضع رابط صورتك هنا">
-        </div>
-
-        <div class="footer-ticker">شريط نصائح للمتداولين: التزم بالخطة، ولا تلاحق السعر!</div>
+    <div class="clocks-grid">
+        <div class="clock-card"><span class="clock-label">🇸🇦 توقيت السعودية</span><div class="clock-time" id="sa-time">00:00:00</div></div>
+        <div class="clock-card"><span class="clock-label">🇺🇸 توقيت نيويورك</span><div class="clock-time" id="ny-time">00:00:00</div></div>
+        <div class="clock-card"><span class="clock-label">🇬🇧 توقيت لندن</span><div class="clock-time" id="lon-time">00:00:00</div></div>
+        <div class="clock-card"><span class="clock-label">🇯🇵 توقيت آسيا (طوكيو)</span><div class="clock-time" id="tk-time">00:00:00</div></div>
     </div>
 
-    <script>
-        function updateClocks() {
-            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('ar-SA', {timeZone: 'Asia/Riyadh', ...options});
-            document.getElementById('london-time').innerText = new Date().toLocaleTimeString('ar-SA', {timeZone: 'Europe/London', ...options});
-            document.getElementById('ny-time').innerText = new Date().toLocaleTimeString('ar-SA', {timeZone: 'America/New_York', ...options});
-            document.getElementById('tokyo-time').innerText = new Date().toLocaleTimeString('ar-SA', {timeZone: 'Asia/Tokyo', ...options});
-        }
-        setInterval(updateClocks, 1000);
-        updateClocks();
-    </script>
+    <div class="main-content">
+        <div class="right-side">
+            <div class="box" style="height: 450px; margin-bottom: 20px;">
+                <div id="tradingview_spx" style="height: 100%;"></div>
+            </div>
+
+            <div class="box">
+                <h3 style="margin-top:0; color: #fff;">📊 مستويات الجلسة اليومية</h3>
+                <div class="analysis-levels">
+                    <div class="level-item"><strong>المقاومة:</strong> 7,465</div>
+                    <div class="level-item"><strong>الدعم:</strong> 7,389</div>
+                    <div class="level-item"><strong>المتوسط:</strong> 7,420</div>
+                    <div class="level-item"><strong>الأهداف:</strong> 7,510</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="left-side">
+            <div class="box image-box">
+                <h3 style="margin-top:0; color: #fff; text-align: center;">🖼️ شارت التحليل المرفوع</h3>
+                <img src="https://via.placeholder.com/400x500?text=يرجى+رفع+صورة+الشارت+هنا" alt="تحليل اليوم">
+                <p style="font-size: 0.85rem; color: #787b86; margin-top: 10px; text-align: center;">
+                    هنا تظهر صورة تحليلك اليدوي لليوم
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ticker-footer">
+        <div class="ticker-text">
+            نصيحة عبقرينو اليوم: "السوق لا يعطيك ما تريد، بل يعطيك ما يستحق انضباطك.. التزم بالوقف والأهداف دائماً." 🦅
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<script type="text/javascript">
+new TradingView.widget({
+  "autosize": true,
+  "symbol": "CAPITALCOM:SPX500",
+  "interval": "D",
+  "timezone": "Etc/UTC",
+  "theme": "dark",
+  "style": "1",
+  "locale": "ar",
+  "container_id": "tradingview_spx"
+});
+
+// دالة الساعات الحية
+function updateClocks() {
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Riyadh', ...options});
+    document.getElementById('ny-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'America/New_York', ...options});
+    document.getElementById('lon-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Europe/London', ...options});
+    document.getElementById('tk-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Tokyo', ...options});
+}
+setInterval(updateClocks, 1000);
+updateClocks();
+</script>
+
 </body>
 </html>

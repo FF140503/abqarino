@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة عبقرينو الرقمية 🧠</title>
+    <title>عليمي اداول</title>
     <style>
         :root {
             --bg: #0c101b;
@@ -234,7 +234,7 @@
             </div>
 
             <div class="box" style="height: 520px; padding: 15px;">
-                <div class="box-title">📊 مؤشر سباكس مباشر (SPX500)</div>
+                <div class="box-title">📊 مؤشن سباكس مباشر (SPX500)</div>
                 <div id="tradingview_spx_live" style="height: calc(100% - 45px); border-radius: 8px; overflow: hidden;"></div>
             </div>
         </div>
@@ -314,6 +314,7 @@
 const SUPABASE_URL = "https://your-project-id.supabase.co"; 
 const SUPABASE_KEY = "your-anon-public-key";
 
+// تعديل الدالة لترتبط باسم جدولك الفعلي المحتوي على مسافات
 async function supabaseFetch(endpoint, options = {}) {
     const headers = {
         "apikey": SUPABASE_KEY,
@@ -350,7 +351,8 @@ window.addEventListener('DOMContentLoaded', fetchCloudData);
 
 async function fetchCloudData() {
     try {
-        const data = await supabaseFetch("dashboard_data?id=eq.1&select=*");
+        // تم تغيير المسار ليتجه لجدول Dashboard Metrics Storage مباشرة
+        const data = await supabaseFetch(`"Dashboard%20Metrics%20Storage"?id=eq.1&select=*`);
         if (data && data.length > 0) {
             const cloud = data[0];
             
@@ -413,7 +415,8 @@ async function pushDataToCloud() {
     }
 
     try {
-        await supabaseFetch("dashboard_data?id=eq.1", {
+        // المزامنة والحفظ بداخل اسم الجدول الصحيح سحابياً
+        await supabaseFetch(`"Dashboard%20Metrics%20Storage"?id=eq.1`, {
             method: "PATCH",
             body: JSON.stringify({
                 chart_image: chartLink,

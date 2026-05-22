@@ -104,22 +104,6 @@
 
         .box-title { margin-top: 0; margin-bottom: 15px; color: #fff; text-align: right; font-size: 1.25rem; font-weight: bold; border-bottom: 1px solid #1e222d; padding-bottom: 10px; }
 
-        .upload-container { text-align: center; }
-        .custom-file-upload {
-            display: none; 
-            padding: 12px 24px;
-            cursor: pointer;
-            background-color: var(--accent);
-            color: white;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            transition: all 0.2s;
-            border: none;
-            box-shadow: 0 4px 10px rgba(41, 98, 255, 0.3);
-        }
-        .custom-file-upload:hover { background-color: #1a4fd4; transform: translateY(-1px); }
-
         .image-display-zone {
             width: 100%;
             min-height: 420px;
@@ -241,16 +225,10 @@
 
     <div class="main-layout">
         <div class="charts-display-side">
-            <div class="box upload-container">
-                <div class="box-title">🖼️ شارت التحليل والموجات الفنية</div>
-                
-                <label class="custom-file-upload" id="secure-upload-btn">
-                    <input type="file" accept="image/*" onchange="compressAndUploadChart(event)">
-                    📁 اختر شارت التحليل من جهازك الحين
-                </label>
-                
+            <div class="box">
+                <div class="box-title">🖼️ شارت التحليل والموجات الفنية المباشر</div>
                 <div class="image-display-zone">
-                    <span class="placeholder-text" id="upload-placeholder">جاري جلب آخر تحليل موجي تم رفعه للسحاب...</span>
+                    <span class="placeholder-text" id="upload-placeholder">انتظر حتى يقوم المحلل بوضع رابط شارت الجلسة الحالي...</span>
                     <img id="main-analysis-view" alt="شارت تحليل اليوم">
                 </div>
             </div>
@@ -271,7 +249,6 @@
 
             <div class="box">
                 <div class="box-title">📊 مستويات المقاصة والجلسة الحية</div>
-                
                 <div class="display-levels-grid">
                     <div class="level-box"><span class="title res-title">المقاومة</span><div class="level-num" id="live-res">-</div></div>
                     <div class="level-box"><span class="title piv-title">المتوسط</span><div class="level-num" id="live-piv">-</div></div>
@@ -286,9 +263,13 @@
             </div>
 
             <div class="box control-panel" id="secure-control-panel">
-                <div class="box-title">⚙️ تحديث البيانات والأهداف يدوياً</div>
-                <p style="font-size: 0.85rem; color: #787b86; margin-top: -8px; margin-bottom: 20px; text-align: right;">عند الكتابة هنا، تتحدث الشاشات عند جميع الزوار سحابياً تلقائياً وبنفس اللحظة:</p>
+                <div class="box-title">⚙️ لوحة السحاب الفورية للتحكم بالمنصة</div>
                 
+                <div class="input-group" style="border-bottom: 1px dashed var(--border); padding-bottom: 15px; margin-bottom: 15px;">
+                    <label style="color: var(--primary); font-weight: bold;">🔗 رابط شارت التحليل (من TradingView):</label>
+                    <input type="text" id="in-chart" placeholder="انسخ رابط الشارت وضعه هنا مباشرة" oninput="pushDataToCloud()">
+                </div>
+
                 <div class="input-group">
                     <label>المقاومة:</label>
                     <input type="text" id="in-res" oninput="pushDataToCloud()">
@@ -330,7 +311,6 @@
 
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script type="text/javascript">
-// 1. مفاتيح الربط السحابي بقاعدة بيانات المزامنة الخاصة بك
 const SUPABASE_URL = "https://your-project-id.supabase.co"; 
 const SUPABASE_KEY = "your-anon-public-key";
 
@@ -374,6 +354,7 @@ async function fetchCloudData() {
         if (data && data.length > 0) {
             const cloud = data[0];
             
+            document.getElementById('in-chart').value = cloud.chart_image || '';
             document.getElementById('in-res').value = cloud.resistance || '';
             document.getElementById('in-piv').value = cloud.pivot || '';
             document.getElementById('in-sup').value = cloud.support || '';
@@ -390,13 +371,12 @@ async function fetchCloudData() {
 
             const imgElement = document.getElementById('main-analysis-view');
             const placeholder = document.getElementById('upload-placeholder');
-            if (cloud.chart_image && cloud.chart_image.length > 10) {
+            if (cloud.chart_image && cloud.chart_image.trim().length > 10) {
                 imgElement.src = cloud.chart_image;
                 imgElement.style.display = 'block';
                 placeholder.style.display = 'none';
             } else {
                 imgElement.style.display = 'none';
-                placeholder.innerText = "انتظر رفع صورة الشارت المحدثة للجلسة الحالية من المحلل...";
                 placeholder.style.display = 'block';
             }
         }
@@ -406,6 +386,7 @@ async function fetchCloudData() {
 }
 
 async function pushDataToCloud() {
+    const chartLink = document.getElementById('in-chart').value;
     const res = document.getElementById('in-res').value;
     const piv = document.getElementById('in-piv').value;
     const sup = document.getElementById('in-sup').value;
@@ -420,10 +401,22 @@ async function pushDataToCloud() {
     document.getElementById('live-t2').innerText = t2 || '-';
     document.getElementById('live-t3').innerText = t3 || '-';
 
+    const imgElement = document.getElementById('main-analysis-view');
+    const placeholder = document.getElementById('upload-placeholder');
+    if (chartLink.trim().length > 10) {
+        imgElement.src = chartLink;
+        imgElement.style.display = 'block';
+        placeholder.style.display = 'none';
+    } else {
+        imgElement.style.display = 'none';
+        placeholder.style.display = 'block';
+    }
+
     try {
         await supabaseFetch("dashboard_data?id=eq.1", {
             method: "PATCH",
             body: JSON.stringify({
+                chart_image: chartLink,
                 resistance: res,
                 pivot: piv,
                 support: sup,
@@ -434,60 +427,6 @@ async function pushDataToCloud() {
         });
     } catch (e) {
         console.error("فشل إرسال البيانات السحابية:", e);
-    }
-}
-
-// 🛠️ دالة الرفع والضغط الفائق والمضمون 100%
-function compressAndUploadChart(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.src = e.target.result;
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // تحديد أبعاد خفيفة جداً تضمن المرور السريع عبر السيرفر
-            const targetWidth = 720; 
-            const scale = targetWidth / img.width;
-            canvas.width = targetWidth;
-            canvas.height = img.height * scale;
-            
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-            // استخدام ضغط JPEG مكثف وبجودة 0.55 مناسبة جداً للنقل البرمجي
-            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.55);
-            
-            saveChartToCloud(compressedBase64);
-        };
-    };
-    reader.readAsDataURL(file);
-}
-
-async function saveChartToCloud(imageData) {
-    const imgElement = document.getElementById('main-analysis-view');
-    const placeholder = document.getElementById('upload-placeholder');
-    
-    try {
-        placeholder.innerText = "جاري الحفظ والمزامنة السحابية السريعة...";
-        placeholder.style.display = 'block';
-        imgElement.style.display = 'none';
-
-        await supabaseFetch("dashboard_data?id=eq.1", {
-            method: "PATCH",
-            body: JSON.stringify({ chart_image: imageData })
-        });
-
-        imgElement.src = imageData;
-        placeholder.style.display = 'none';
-        imgElement.style.display = 'block';
-    } catch(e) {
-        // إذا حدث أي قصور بالرفع يتم التنبيه فوراً للمحاولة دون تجميد اللوحة
-        placeholder.innerText = "حدث خطأ في حجم النقل، جاري إعادة المحاولة الفورية تلقائياً...";
-        console.error("فشل الرفع:", e);
     }
 }
 
@@ -515,11 +454,10 @@ function checkAdminPassword() {
 
     if (enteredPass === correctPass) {
         document.getElementById('secure-control-panel').style.display = 'block';
-        document.getElementById('secure-upload-btn').style.display = 'inline-block';
         document.getElementById('auth-box').style.display = 'none';
-        alert('أهلاً بك، تم تفعيل صلاحيات التحكم والرفع السحابي الذكي بنجاح!');
+        alert('تم تفعيل صلاحيات التعديل الفوري بنجاح!');
     } else {
-        alert('الرمز السري الذي أدخلته غير صحيح، حاول مرة أخرى.');
+        alert('الرمز السري غير صحيح.');
     }
 }
 </script>

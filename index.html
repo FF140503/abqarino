@@ -502,14 +502,14 @@ function toggleAudio() {
         audio.pause();
         btn.innerText = "▶️ تشغيل الشيلة";
         btn.classList.remove('pause');
-        statusText.innerText = "الصومت مغلق 🔇";
+        statusText.innerText = "الصوت مغلق 🔇";
     }
 }
 
 // 8. جدار التحقق وصلاحيات الدخول للمشرف والأدمن
 function checkAdminPassword() {
     const enteredPass = document.getElementById('password-input').value;
-    const correctPass = "1234"; // 🛠️ يمكنك استبدال رقمك السري الحصري هنا
+    const correctPass = "1234"; // 🛠️ يمكنك استبدال رقمك السري الحصري هنا هنا
 
     if (enteredPass === correctPass) {
         document.getElementById('secure-control-panel').style.display = 'block';

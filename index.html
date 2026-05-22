@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة عمليات عبقرينو 🧠</title>
+    <title>غرفة عمليات عبقرينو لتدفق السيولة 🧠</title>
     <style>
         :root {
             --bg: #0c101b;
@@ -13,6 +13,7 @@
             --primary: #38bdf8;
             --accent: #2962ff;
             --success: #22c55e;
+            --danger: #ef4444;
         }
 
         body {
@@ -56,14 +57,14 @@
         .clock-label { color: var(--primary); font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: block; }
         .clock-time { font-family: 'Courier New', Courier, monospace; font-size: 2rem; font-weight: bold; color: #fff; background: #070a12; padding: 5px; border-radius: 6px; border: 1px solid #1e222d; display: inline-block; width: 80%; }
 
-        /* توزيع الواجهة */
-        .main-content {
+        /* توزيع الواجهة الجديد */
+        .main-layout {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 2.5fr 1.5fr;
             gap: 20px;
         }
 
-        @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
+        @media (max-width: 950px) { .main-layout { grid-template-columns: 1fr; } }
 
         .box {
             background: var(--card);
@@ -73,74 +74,104 @@
             margin-bottom: 20px;
         }
 
-        /* لوحة التحكم وإدخال البيانات الحية */
-        .input-panel {
-            background: #171b26;
-            border: 1px dashed var(--primary);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-        .input-group label { width: 80px; font-weight: bold; color: var(--primary); }
-        .input-group input {
-            background: #0c101b;
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 8px;
-            border-radius: 5px;
-            flex-grow: 1;
-            font-size: 1rem;
+        /* منطقة رفع الشارت الأساسي */
+        .upload-container {
+            text-align: center;
         }
 
-        /* عرض مستويات المقاصة والجلسة */
-        .analysis-levels {
-            margin-top: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            text-align: right;
-        }
-
-        .level-item { background: rgba(56, 189, 248, 0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
-        .level-item strong { color: var(--primary); display: block; margin-bottom: 5px; }
-        .level-val { font-size: 1.3rem; font-weight: bold; color: #fff; }
-
-        /* منطقة رفع وعرض الشارت */
-        .upload-zone { text-align: center; }
         .custom-file-upload {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 25px;
             cursor: pointer;
             background-color: var(--accent);
             color: white;
             border-radius: 8px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
             transition: background 0.2s;
         }
+        .custom-file-upload:hover { background-color: #1a4fd4; }
         input[type="file"] { display: none; }
 
-        .image-preview-container {
+        .image-display-zone {
             width: 100%;
-            min-height: 250px;
+            min-height: 450px;
             border: 2px dashed var(--border);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             background: #070a12;
+            overflow: hidden;
         }
-        .image-preview-container img { width: 100%; height: auto; display: none; object-fit: contain; }
-        .placeholder-text { color: #4b5266; font-size: 0.95rem; padding: 20px; }
 
-        /* شريط النصائح */
+        .image-display-zone img {
+            width: 100%;
+            height: auto;
+            display: none;
+            object-fit: contain;
+        }
+
+        .placeholder-text {
+            color: #4b5266;
+            font-size: 1.1rem;
+            padding: 40px;
+            line-height: 1.6;
+        }
+
+        /* لوحة عرض البيانات الفنية الحية */
+        .display-levels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .level-box {
+            background: rgba(7, 10, 18, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .level-box.span-3 { grid-column: span 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: rgba(34, 197, 94, 0.02); border-color: rgba(34, 197, 94, 0.2); }
+
+        .level-box title { display: block; font-size: 0.95rem; font-weight: bold; margin-bottom: 8px; }
+        .res-title { color: var(--danger); }
+        .piv-title { color: var(--primary); }
+        .sup-title { color: #eab308; }
+        .tar-title { color: var(--success); display: block; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; }
+
+        .level-num { font-size: 1.5rem; font-weight: bold; color: #fff; font-family: 'Courier New', Courier, monospace; }
+
+        /* لوحة التحكم الجانبية لادخال البيانات */
+        .control-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .input-group label { font-size: 0.9rem; font-weight: bold; color: var(--text); }
+        .input-group input {
+            background: #070a12;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .input-group input:focus { border-color: var(--primary); outline: none; }
+
+        .targets-inputs {
+            border-top: 1px dashed var(--border);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        /* شريط النصائح السفلي */
         .ticker-footer {
             background: var(--accent);
             color: white;
@@ -168,57 +199,80 @@
         <div class="clock-card"><span class="clock-label">🇯🇵 توقيت آسيا (طوكيو)</span><div class="clock-time" id="tk-time">00:00:00</div></div>
     </div>
 
-    <div class="main-content">
-        <div class="right-side">
-            <div class="box" style="height: 480px; padding: 10px;">
-                <div id="tradingview_spx" style="height: 100%;"></div>
+    <div class="main-layout">
+        <div class="charts-display-side">
+            <div class="box upload-container">
+                <h2 style="margin-top:0; color: #fff; text-align: right; font-size: 1.4rem; border-bottom: 1px solid var(--border); padding-bottom: 10px;">🖼️ تحليل اليوم</h2>
+                
+                <label class="custom-file-upload">
+                    <input type="file" accept="image/*" onchange="loadUserChart(event)">
+                    📁 ارفع شارت التحليل الفني من جهازك الحين
+                </label>
+
+                <div class="image-display-zone">
+                    <span class="placeholder-text" id="upload-placeholder">يرجى الضغط على الزر بالأعلى لاختيار ورفع شارت تحليل اليوم الحركي مباشرة من جهازك ليعرض هنا بدلاً من الشارت القديم.</span>
+                    <img id="main-analysis-view" alt="تحليل اليوم الحالي">
+                </div>
             </div>
 
-            <div class="box">
-                <h3 style="margin-top:0; color: #fff;">📊 مستويات المقاصة والجلسة اليومية</h3>
-                <div class="analysis-levels">
-                    <div class="level-item"><strong>المقاومة</strong><div class="level-val" id="val-resistance">7,465</div></div>
-                    <div class="level-item"><strong>المتوسط</strong><div class="level-val" id="val-pivot">7,420</div></div>
-                    <div class="level-item"><strong>الدعم</strong><div class="level-val" id="val-support">7,389</div></div>
+            <div class="box" style="text-align: center;">
+                <h3 style="margin-top:0; color: #fff; text-align: right; font-size: 1.2rem;">📈 شارت الموجات والحركة التكتيكية الثابتة</h3>
+                <div style="border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #070a12;">
+                    <img src="https://raw.githubusercontent.com/FF140503/abqarino/main/image_edba25.png" alt="شارت تكتيكي استباقي" style="width: 100%; height: auto; display: block;">
                 </div>
-
-                <div class="input-panel">
-                    <h4 style="margin: 0 0 10px 0; color: var(--primary);">⚙️ تحديث المستويات يدوياً (اكتب هنا لتتغير بالأعلى فوراً):</h4>
-                    <div class="input-group">
-                        <label>المقاومة:</label>
-                        <input type="text" id="input-resistance" value="7,465" oninput="updateValues()">
-                    </div>
-                    <div class="input-group">
-                        <label>المتوسط:</label>
-                        <input type="text" id="input-pivot" value="7,420" oninput="updateValues()">
-                    </div>
-                    <div class="input-group">
-                        <label>الدعم:</label>
-                        <input type="text" id="input-support" value="7,389" oninput="updateValues()">
-                    </div>
-                </div>
+                <p style="font-size: 0.85rem; color: #787b86; margin-top: 10px; margin-bottom: 0; text-align: right;">مخطط المسار الاستباقي ومناطق تصفية السيولة واصطياد الـ Discount</p>
             </div>
         </div>
 
-        <div class="left-side">
-            <div class="box upload-zone">
-                <h3 style="margin-top:0; color: #fff;">🖼️ تحليل اليوم</h3>
-                <label class="custom-file-upload">
-                    <input type="file" accept="image/*" onchange="previewImage(event)">
-                    📁 اختر شارت التحليل من جهازك
-                </label>
-                <div class="image-preview-container">
-                    <span class="placeholder-text" id="placeholder-msg">اضغط على الزر بالأعلى لرفع شارت تحليل اليوم مباشرة من جهازك</span>
-                    <img id="output-image" alt="شارت تحليل اليوم">
+        <div class="control-side">
+            <div class="box">
+                <h3 style="margin-top: 0; font-size: 1.2rem; color: #fff;">📊 مستويات المقاصة والجلسة الحية</h3>
+                
+                <div class="display-levels-grid">
+                    <div class="level-box"><span class="title res-title">المقاومة</span><div class="level-num" id="live-res">7,465</div></div>
+                    <div class="level-box"><span class="title piv-title">المتوسط</span><div class="level-num" id="live-piv">7,420</div></div>
+                    <div class="level-box"><span class="title sup-title">الدعم</span><div class="level-num" id="live-sup">7,389</div></div>
+                    
+                    <div class="level-box span-3">
+                        <div><span class="tar-title">الهدف الأول 🎯</span><div class="level-num" id="live-t1">7,490</div></div>
+                        <div><span class="tar-title">الهدف الثاني 🎯</span><div class="level-num" id="live-t2">7,510</div></div>
+                        <div><span class="tar-title">الهدف الثالث 🎯</span><div class="level-num" id="live-t3">7,535</div></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="box" style="padding: 15px; text-align: center;">
-                <h3 style="margin-top:0; color: #fff;">📈 شارت الموجات والحركة التكتيكية</h3>
-                <div style="border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
-                    <img src="https://raw.githubusercontent.com/FF140503/abqarino/main/image_edba25.png" alt="شارت تكتيكي" style="width: 100%; height: auto; display: block;">
+            <div class="box control-panel">
+                <h3>⚙️ لوحة التحديث اليدوي اللحظي</h3>
+                <p style="font-size: 0.85rem; color: #787b86; margin-top: -5px; margin-bottom: 15px;">تعديل الأرقام هنا يحدثها فوراً على الشاشة أمام المتابعين:</p>
+                
+                <div class="input-group">
+                    <label>المقاومة اليومية:</label>
+                    <input type="text" id="in-res" value="7,465" oninput="syncTechnicalData()">
                 </div>
-                <p style="font-size: 0.85rem; color: #787b86; margin-top: 10px; margin-bottom: 0;">مخطط المسار الاستباقي ومناطق تصفية السيولة العمياء</p>
+                <div class="input-group">
+                    <label>نقطة المتوسط (Pivot):</label>
+                    <input type="text" id="in-piv" value="7,420" oninput="syncTechnicalData()">
+                </div>
+                <div class="input-group">
+                    <label>الدعم اليومي:</label>
+                    <input type="text" id="in-sup" value="7,389" oninput="syncTechnicalData()">
+                </div>
+
+                <div class="targets-inputs">
+                    <h4 style="margin: 0 0 10px 0; color: var(--success); font-size: 0.95rem;">🎯 تحديد المستهدفات السعرية:</h4>
+                    <div class="input-group">
+                        <label>الهدف الأول (T1):</label>
+                        <input type="text" id="in-t1" value="7,490" oninput="syncTechnicalData()">
+                    </div>
+                    <div class="input-group">
+                        <label>الهدف الثاني (T2):</label>
+                        <input type="text" id="in-t2" value="7,510" oninput="syncTechnicalData()">
+                    </div>
+                    <div class="input-group">
+                        <label>الهدف الثالث (T3):</label>
+                        <input type="text" id="in-t3" value="7,535" oninput="syncTechnicalData()">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -230,48 +284,39 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-<script type="text/javascript">
-new TradingView.widget({
-  "autosize": true,
-  "symbol": "CAPITALCOM:SPX500",
-  "interval": "15",
-  "timezone": "Etc/UTC",
-  "theme": "dark",
-  "style": "1",
-  "locale": "ar",
-  "container_id": "tradingview_spx"
-});
-
-// إدارة الساعات الرقمية بنظام جدارة
-function updateClocks() {
+<script>
+// تشغيل ساعات جدارة الرقمية للأسواق
+function runJaddarahClocks() {
     const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     document.getElementById('sa-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Riyadh', ...options});
     document.getElementById('ny-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'America/New_York', ...options});
     document.getElementById('lon-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Europe/London', ...options});
     document.getElementById('tk-time').innerText = new Date().toLocaleTimeString('en-US', {timeZone: 'Asia/Tokyo', ...options});
 }
-setInterval(updateClocks, 1000);
-updateClocks();
+setInterval(runJaddarahClocks, 1000);
+runJaddarahClocks();
 
-// رفع وعرض صورة شارت تحليل اليوم من الجهاز فوراً
-function previewImage(event) {
+// معالجة ورفع صورة تحليل اليوم من الملفات المحلية مباشرة
+function loadUserChart(event) {
     const reader = new FileReader();
     reader.onload = function() {
-        const output = document.getElementById('output-image');
-        const placeholder = document.getElementById('placeholder-msg');
-        output.src = reader.result;
-        output.style.display = 'block';
+        const imgElement = document.getElementById('main-analysis-view');
+        const placeholder = document.getElementById('upload-placeholder');
+        imgElement.src = reader.result;
+        imgElement.style.display = 'block';
         placeholder.style.display = 'none';
     }
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// دالة التحديث اللحظي لخانات الدعم والمقاومة والمتوسط
-function updateValues() {
-    document.getElementById('val-resistance').innerText = document.getElementById('input-resistance').value;
-    document.getElementById('val-pivot').innerText = document.getElementById('input-pivot').value;
-    document.getElementById('val-support').innerText = document.getElementById('input-support').value;
+// دالة المزامنة اليدوية اللحظية للبيانات والأهداف الرقمية
+function syncTechnicalData() {
+    document.getElementById('live-res').innerText = document.getElementById('in-res').value;
+    document.getElementById('live-piv').innerText = document.getElementById('in-piv').value;
+    document.getElementById('live-sup').innerText = document.getElementById('in-sup').value;
+    document.getElementById('live-t1').innerText = document.getElementById('in-t1').value;
+    document.getElementById('live-t2').innerText = document.getElementById('in-t2').value;
+    document.getElementById('live-t3').innerText = document.getElementById('in-t3').value;
 }
 </script>
 
